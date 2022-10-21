@@ -12,7 +12,7 @@ static spiHardware_t spiHardwareMap[] = {
 
 static const int spiClk = 1000000; // 1 MHz
 
-void spiDeviceInit(SPIDevice device)
+void spiInit(SPIDevice device)
 {
     spiHardware_t spiHardware = spiHardwareMap[device];
     if (!spiHardware.instance) {
@@ -101,7 +101,7 @@ static i2cHardware_t i2cHardwareMap[] = {
     {.dev = &Wire1, .instance = NULL},
 };
 
-void i2cDeviceInit(I2CDevice device)
+void i2cInit(I2CDevice device)
 {
     i2cHardware_t i2cHardware = i2cHardwareMap[device];
     if (!i2cHardware.instance) {
@@ -291,8 +291,9 @@ busDevice_t * busDeviceInit(busType_e bus, devHardwareType_e hw)
     switch (hw)
     {
     case DEVHW_HMC5883:
-        i2cDeviceInit(I2CDEV_1);
-        return &busDeviceHardwareMap[0];
+        busDevice_t * busDevice = &busDeviceHardwareMap[0];
+        i2cInit(busDevice->busdev.i2c.i2cBus);
+        return ;
         break;
     
     default:
