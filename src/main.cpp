@@ -1,15 +1,25 @@
 #include <Arduino.h>
+#include "main/led.h"
 #include "main/position.h"
 #include "main/direction.h"
 #include "main/servos.h"
 
 void setup() {
   xTaskCreate(
+    ledTask,
+    "ledTask",
+    1000,
+    NULL,
+    5,
+    NULL
+  );
+
+  xTaskCreate(
     positionTask,
     "positionTask",
     1000,
     NULL,
-    1,
+    3,
     NULL
   );
 
@@ -18,7 +28,7 @@ void setup() {
     "directionTask",
     1000,
     NULL,
-    1,
+    3,
     NULL
   );
 
@@ -27,7 +37,7 @@ void setup() {
     "servosTask",
     1000,
     NULL,
-    1,
+    3,
     NULL
   );
 }
