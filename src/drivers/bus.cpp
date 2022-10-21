@@ -291,10 +291,12 @@ busDevice_t * busDeviceInit(busType_e bus, devHardwareType_e hw)
     switch (hw)
     {
     case DEVHW_HMC5883:
+    {
         busDevice_t * busDevice = &busDeviceHardwareMap[0];
         i2cInit(busDevice->busdev.i2c.i2cBus);
-        return ;
+        return busDevice;
         break;
+    }
     
     default:
         break;

@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include "targets/target.h"
 #include "common/vector.h"
 #include "common/axis.h"
 

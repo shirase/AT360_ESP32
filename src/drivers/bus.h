@@ -64,7 +64,6 @@ typedef struct busDevice_s {
 
 typedef enum {
     DEVHW_NONE = 0,
-
     DEVHW_HMC5883,
 } devHardwareType_e;
 
