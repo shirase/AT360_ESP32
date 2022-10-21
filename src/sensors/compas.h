@@ -13,8 +13,6 @@ typedef struct mag_s {
 
 extern mag_t mag;
 
-#ifdef USE_MAG
-
 typedef enum {
     MAG_NONE = 0,
     MAG_AUTODETECT = 1,
@@ -36,6 +34,8 @@ typedef struct compassConfig_s {
     int16_t pitchDeciDegrees;               // Alignment for external mag on the pitch (Y) axis (0.1deg)
     int16_t yawDeciDegrees;                 // Alignment for external mag on the yaw (Z) axis (0.1deg)
 } compassConfig_t;
+
+#ifdef USE_MAG
 
 bool compassDetect(magDev_t *dev, magSensor_e magHardwareToUse);
 
