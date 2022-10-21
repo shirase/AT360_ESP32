@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include "targets/target.h"
 #include "main/led.h"
 #include "main/position.h"
 #include "main/direction.h"

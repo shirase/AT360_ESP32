@@ -4,9 +4,9 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "bus.h"
+#define IO_t uint8_t
 
-typedef uint8_t IO_t; 
+#include "bus.h"
 
 void IOLo(IO_t io);
 void IOHi(IO_t io);

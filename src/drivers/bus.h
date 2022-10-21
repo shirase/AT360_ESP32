@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "targets/target.h"
 #include "io.h"
 
 typedef enum SPIDevice {
@@ -61,3 +62,16 @@ typedef struct busDevice_s {
                                     // (like MPU/ICM acc-gyro sensors)
 } busDevice_t;
 
+typedef enum {
+    DEVHW_NONE = 0,
+
+    DEVHW_HMC5883,
+} devHardwareType_e;
+
+busDevice_t * busDeviceInit(busType_e bus, devHardwareType_e hw);
+void busDeviceDeInit(busDevice_t * dev);
+
+bool busRead(const busDevice_t * dev, uint8_t reg, uint8_t * data);
+bool busReadBuf(const busDevice_t * dev, uint8_t reg, uint8_t * data, uint8_t length);
+bool busWrite(const busDevice_t * dev, uint8_t reg, uint8_t data);
+bool busWriteBuf(const busDevice_t * dev, uint8_t reg, const uint8_t * data, uint8_t length);
