@@ -1,6 +1,6 @@
 #include "direction.h"
-#include "sensors/compas.h"
-#include "drivers/compas/compass.h"
+#include "sensors/compass.h"
+#include "drivers/compass/compass.h"
 
 void directionTask(void * parameter)
 {

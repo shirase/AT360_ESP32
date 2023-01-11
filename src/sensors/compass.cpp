@@ -1,6 +1,6 @@
-#include "compas.h"
+#include "compass.h"
 #include "common/utils.h"
-#include "drivers/compas/compass_hmc5883l.h"
+#include "drivers/compass/compass_hmc5883l.h"
 
 mag_t mag;
 

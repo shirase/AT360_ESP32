@@ -2,7 +2,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include "drivers/compas/compass.h"
+#include "drivers/compass/compass.h"
 #include "sensors.h"
 #include "targets/target.h"
 
