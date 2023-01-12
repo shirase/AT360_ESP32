@@ -151,7 +151,7 @@ char *ftoa(float x, char *floatString)
     int32_t value;
     char intString1[12];
     char intString2[12] = { 0, };
-    char *decimalPoint = ".";
+    char *decimalPoint = (char *)".";
     uint8_t dpLocation;
 
     if (x > 0)                  // Rounding for x.xxx display format

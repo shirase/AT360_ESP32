@@ -316,7 +316,7 @@ enum {
     MSG_CFG_NAV_SETTINGS = 0x24,
     MSG_CFG_SBAS = 0x16,
     MSG_CFG_GNSS = 0x3e
-} ubx_protocol_bytes;
+} /*ubx_protocol_bytes*/;
 
 enum {
     FIX_NONE = 0,
@@ -325,17 +325,17 @@ enum {
     FIX_3D = 3,
     FIX_GPS_DEAD_RECKONING = 4,
     FIX_TIME = 5
-} ubs_nav_fix_type;
+} /*ubs_nav_fix_type*/;
 
 enum {
     NAV_STATUS_FIX_VALID = 1
-} ubx_nav_status_bits;
+} /*ubx_nav_status_bits*/;
 
 enum {
     UBX_ACK_WAITING = 0,
     UBX_ACK_GOT_ACK = 1,
     UBX_ACK_GOT_NAK = 2
-} ubx_ack_state;
+} /*ubx_ack_state*/;
 
 // Packet checksum accumulators
 static uint8_t _ck_a;
