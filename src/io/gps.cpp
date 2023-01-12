@@ -43,6 +43,8 @@
 #include "io/serial.h"
 #include "drivers/led.h"
 #include "sensors/sensors.h"
+#include "common/time.h"
+#include "io/serial.h"
 
 typedef struct {
     bool                isDriverBased;
@@ -65,7 +67,7 @@ static gpsProviderDescriptor_t  gpsProviders[GPS_PROVIDER_COUNT] = {
 #ifdef USE_GPS_PROTO_NMEA
     { false, MODE_RX, false, &gpsRestartNMEA_MTK, &gpsHandleNMEA },
 #else
-    { false, 0, false,  NULL, NULL },
+    { false, (portMode_t)0, false,  NULL, NULL },
 #endif
 
     /* UBLOX binary */
@@ -76,13 +78,13 @@ static gpsProviderDescriptor_t  gpsProviders[GPS_PROVIDER_COUNT] = {
 #endif
 
     /* Stub */
-    { false, 0, false,  NULL, NULL },
+    { false, (portMode_t)0, false,  NULL, NULL },
 
     /* NAZA GPS module */
 #ifdef USE_GPS_PROTO_NAZA
     { false, MODE_RX, true, &gpsRestartNAZA, &gpsHandleNAZA },
 #else
-    { false, 0, false,  NULL, NULL },
+    { false, (portMode_t)0, false,  NULL, NULL },
 #endif
 
     /* UBLOX7PLUS binary */
@@ -96,14 +98,14 @@ static gpsProviderDescriptor_t  gpsProviders[GPS_PROVIDER_COUNT] = {
 #ifdef USE_GPS_PROTO_MTK
     { false, MODE_RXTX, false, &gpsRestartNMEA_MTK, &gpsHandleMTK },
 #else
-    { false, 0, false,  NULL, NULL },
+    { false, (portMode_t)0, false,  NULL, NULL },
 #endif
 
     /* MSP GPS */
 #ifdef USE_GPS_PROTO_MSP
     { true, 0, false, &gpsRestartMSP, &gpsHandleMSP },
 #else
-    { false, 0, false,  NULL, NULL },
+    { false, (portMode_t)0, false,  NULL, NULL },
 #endif
 };
 
@@ -141,7 +143,7 @@ void gpsProcessNewSolutionData(void)
     }
 
     // Pass on GPS update to NAV and IMU
-    onNewGPSData();
+    //onNewGPSData();
 
     // Update time
     gpsUpdateTime();
@@ -211,9 +213,9 @@ void gpsInit(void)
     // Start with baud rate index as configured for serial port
     int baudrateIndex;
     gpsState.baudrateIndex = GPS_BAUDRATE_115200;
-    for (baudrateIndex = 0, gpsState.baudrateIndex = 0; baudrateIndex < GPS_BAUDRATE_COUNT; baudrateIndex++) {
+    for (baudrateIndex = 0, gpsState.baudrateIndex = (gpsBaudRate_e)0; baudrateIndex < GPS_BAUDRATE_COUNT; baudrateIndex++) {
         if (gpsToSerialBaudRate[baudrateIndex] == gpsPortConfig->gps_baudrateIndex) {
-            gpsState.baudrateIndex = baudrateIndex;
+            gpsState.baudrateIndex = (gpsBaudRate_e)baudrateIndex;
             break;
         }
     }
@@ -364,7 +366,7 @@ void gpsEnablePassthrough(serialPort_t *gpsPassthroughPort)
     waitForSerialPortToFinishTransmitting(gpsPassthroughPort);
 
     if (!(gpsState.gpsPort->mode & MODE_TX))
-    serialSetMode(gpsState.gpsPort, gpsState.gpsPort->mode | MODE_TX);
+    serialSetMode(gpsState.gpsPort, (portMode_t)(gpsState.gpsPort->mode | MODE_TX));
 
     char c;
     while (1) {

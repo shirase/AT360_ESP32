@@ -100,7 +100,7 @@ typedef struct {
 } ubx_sbas;
 
 typedef struct {
-    uint8_t class;
+    uint8_t className;
     uint8_t id;
     uint8_t rate;
 } ubx_msg;
@@ -279,7 +279,7 @@ typedef struct {
 } ubx_nav_pvt;
 
 typedef struct {
-    uint8_t class;
+    uint8_t className;
     uint8_t msg;
 } ubx_ack_ack;
 
@@ -514,12 +514,12 @@ static void configureNAV5(uint8_t dynModel, uint8_t fixMode)
     sendConfigMessageUBLOX();
 }
 
-static void configureMSG(uint8_t class, uint8_t id, uint8_t rate)
+static void configureMSG(uint8_t className, uint8_t id, uint8_t rate)
 {
     send_buffer.message.header.msg_class = CLASS_CFG;
     send_buffer.message.header.msg_id = MSG_CFG_SET_RATE;
     send_buffer.message.header.length = 3;
-    send_buffer.message.payload.msg.class = class;
+    send_buffer.message.payload.msg.className = className;
     send_buffer.message.payload.msg.id = id;
     send_buffer.message.payload.msg.rate = rate;
     sendConfigMessageUBLOX();
@@ -602,7 +602,7 @@ static bool gpsParceFrameUBLOX(void)
         gpsSol.epv = gpsConstrainEPE(_buffer.posllh.vertical_accuracy / 10);
         gpsSol.flags.validEPE = 1;
         if (next_fix_type != GPS_NO_FIX)
-            gpsSol.fixType = next_fix_type;
+            gpsSol.fixType = (gpsFixType_e)next_fix_type;
         _new_position = true;
         break;
     case MSG_STATUS:
@@ -644,7 +644,7 @@ static bool gpsParceFrameUBLOX(void)
         break;
     case MSG_PVT:
         next_fix_type = gpsMapFixType(_buffer.pvt.fix_status & NAV_STATUS_FIX_VALID, _buffer.pvt.fix_type);
-        gpsSol.fixType = next_fix_type;
+        gpsSol.fixType = (gpsFixType_e)next_fix_type;
         gpsSol.llh.lon = _buffer.pvt.longitude;
         gpsSol.llh.lat = _buffer.pvt.latitude;
         gpsSol.llh.alt = _buffer.pvt.altitude_msl / 10;  //alt in cm
@@ -1017,7 +1017,7 @@ STATIC_PROTOTHREAD(gpsProtocolStateThread)
 
         // Try sending baud rate switch command at all common baud rates
         gpsSetProtocolTimeout((GPS_BAUD_CHANGE_DELAY + 50) * (GPS_BAUDRATE_COUNT));
-        for (gpsState.autoBaudrateIndex = 0; gpsState.autoBaudrateIndex < GPS_BAUDRATE_COUNT; gpsState.autoBaudrateIndex++) {
+        for (gpsState.autoBaudrateIndex = (gpsBaudRate_e)0; gpsState.autoBaudrateIndex < GPS_BAUDRATE_COUNT; (gpsState.autoBaudrateIndex = (gpsBaudRate_e)(gpsState.autoBaudrateIndex + 1))) {
             // 2. Set serial port to baud rate and send an $UBX command to switch the baud rate specified by portConfig [baudrateIndex]
             serialSetBaudRate(gpsState.gpsPort, baudRates[gpsToSerialBaudRate[gpsState.autoBaudrateIndex]]);
             serialPrint(gpsState.gpsPort, baudInitDataNMEA[gpsState.baudrateIndex]);

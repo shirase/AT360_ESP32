@@ -3,3 +3,7 @@
 #else
 #define FALLTHROUGH do {} while(0)
 #endif
+
+#if !defined(UNUSED)
+#define UNUSED(x) (void)(x)
+#endif

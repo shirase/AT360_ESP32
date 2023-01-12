@@ -34,3 +34,9 @@ typedef uint32_t timeUs_t;
 
 typedef int32_t timeDelta_t;
 #define TIMEDELTA_MAX INT32_MAX
+
+// Milliseconds since Jan 1 1970
+typedef int64_t rtcTime_t;
+
+bool rtcHasTime(void);
+bool rtcSetDateTime(dateTime_t *dt);

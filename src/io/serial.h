@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include "drivers/serial.h"
 
 typedef enum {
     BAUD_AUTO = 0,
@@ -82,3 +83,19 @@ typedef struct serialConfig_s {
 } serialConfig_t;
 
 serialPortConfig_t *findSerialPortConfig(serialPortFunction_e function);
+void waitForSerialPortToFinishTransmitting(serialPort_t *serialPort);
+
+typedef struct serialPortUsage_s {
+    serialPortIdentifier_e identifier;
+    serialPort_t *serialPort;
+    serialPortFunction_e function;
+} serialPortUsage_t;
+
+serialPort_t *openSerialPort(
+    serialPortIdentifier_e identifier,
+    serialPortFunction_e function,
+    serialReceiveCallbackPtr rxCallback,
+    void *rxCallbackData,
+    uint32_t baudRate,
+    portMode_t mode,
+    portOptions_t options);
