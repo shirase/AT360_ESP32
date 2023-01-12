@@ -15,15 +15,12 @@
  * along with Cleanflight.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdbool.h>
-#include <stdlib.h>
-#include <stdint.h>
+#include "targets/target.h"
+
 #include <ctype.h>
 #include <string.h>
 #include <math.h>
 #include <stdarg.h>
-
-#include "targets/target.h"
 
 #if defined(USE_GPS) && defined(USE_GPS_PROTO_UBLOX)
 
@@ -36,9 +33,11 @@
 #include "drivers/serial.h"
 
 
-#include "io/serial.h"
+//#include "io/serial.h"
 #include "io/gps.h"
 #include "io/gps_private.h"
+
+#include "common/protothreads.h"
 
 #define GPS_CFG_CMD_TIMEOUT_MS              200
 #define GPS_VERSION_RETRY_TIMES             2

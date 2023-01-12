@@ -17,9 +17,6 @@
 
 #include "targets/target.h"
 
-#include <stdbool.h>
-#include <stdint.h>
-
 #include <math.h>
 
 #ifdef USE_MAG_HMC5883

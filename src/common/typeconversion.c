@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Cleanflight.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+#include "targets/target.h"
+
 #include <stdint.h>
 #include <string.h>
 #include <math.h>
-
 #include "maths.h"
-
-#include "targets/target.h"
 
 #ifdef REQUIRE_PRINTF_LONG_SUPPORT
 

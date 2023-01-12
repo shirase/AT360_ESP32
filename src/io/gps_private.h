@@ -19,8 +19,6 @@
 
 #ifdef USE_GPS
 
-#include "io/serial.h"
-
 #define GPS_HDOP_TO_EPH_MULTIPLIER      2   // empirical value
 
 // GPS timeout for wrong baud rate/disconnection/etc in milliseconds (default 2000 ms)

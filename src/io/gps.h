@@ -17,9 +17,9 @@
 
 #pragma once
 
-#include <stdbool.h>
-#include <stdint.h>
 #include "targets/target.h"
+#include <stdbool.h>
+
 #include "common/time.h"
 
 #define GPS_DBHZ_MIN 0

@@ -15,6 +15,9 @@
  * along with Cleanflight.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "config/gps.h"
+#include "config/serial.h"
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <ctype.h>
@@ -31,9 +34,13 @@
 #include "sensors/sensors.h"
 #include "sensors/compass.h"
 
-#include "io/serial.h"
 #include "io/gps.h"
 #include "io/gps_private.h"
+
+#include "drivers/serial.h"
+#include "io/serial.h"
+#include "drivers/led.h"
+#include "sensors/sensors.h"
 
 typedef struct {
     bool                isDriverBased;
@@ -420,7 +427,7 @@ bool isGPSHealthy(void)
 
 bool isGPSHeadingValid(void)
 {
-    return sensors(SENSOR_GPS) && STATE(GPS_FIX) && gpsSol.numSat >= 6 && gpsSol.groundSpeed >= 300;
+    return sensors(SENSOR_GPS) && gpsSol.numSat >= 6 && gpsSol.groundSpeed >= 300;
 }
 
 #endif

@@ -1,12 +1,9 @@
 #pragma once
 
-#include <Arduino.h>
-#include <stdbool.h>
-#include <stdint.h>
+#include <stdlib.h>
 
 #define IO_t uint8_t
-
-#include "bus.h"
+typedef uint8_t ioTag_t;
 
 void IOLo(IO_t io);
 void IOHi(IO_t io);

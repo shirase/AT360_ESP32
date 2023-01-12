@@ -15,12 +15,11 @@
  * along with Cleanflight.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdbool.h>
-#include <stdint.h>
+#include "targets/target.h"
+
 #include <ctype.h>
 #include <string.h>
-
-#include "targets/target.h"
+#include "string_light.h"
 
 #ifdef USE_GPS
 

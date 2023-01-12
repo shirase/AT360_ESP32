@@ -17,20 +17,12 @@
 
 #pragma once
 
-#include <stdbool.h>
+int sl_isalnum(int c);
+int sl_isdigit(int c);
+int sl_isupper(int c);
+int sl_islower(int c);
+int sl_tolower(int c);
+int sl_toupper(int c);
 
-typedef enum {
-    ALIGN_DEFAULT = 0,                                      // driver-provided alignment
-    CW0_DEG = 1,
-    CW90_DEG = 2,
-    CW180_DEG = 3,
-    CW270_DEG = 4,
-    CW0_DEG_FLIP = 5,
-    CW90_DEG_FLIP = 6,
-    CW180_DEG_FLIP = 7,
-    CW270_DEG_FLIP = 8
-} sensor_align_e;
-
-struct magDev_s;
-typedef bool (*sensorMagInitFuncPtr)(struct magDev_s *mag);
-typedef bool (*sensorMagReadFuncPtr)(struct magDev_s *mag);
+int sl_strcasecmp(const char * s1, const char * s2);
+int sl_strncasecmp(const char * s1, const char * s2, int n);

@@ -1,5 +1,9 @@
 #include "led.h"
 
+#include <Arduino.h>
+#include <stdbool.h>
+#include <stdint.h>
+
 #define LED 2
 
 void ledTask(void * parameter)

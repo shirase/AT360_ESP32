@@ -1,4 +1,5 @@
 #include "io.h"
+#include <Arduino.h>
 
 void IOLo(IO_t io)
 {

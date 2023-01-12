@@ -1,10 +1,8 @@
 #pragma once
 
-#include <stdbool.h>
-#include <stdint.h>
+#include "targets/target.h"
 #include "drivers/compass/compass.h"
 #include "sensors.h"
-#include "targets/target.h"
 
 typedef struct mag_s {
     magDev_t dev;
