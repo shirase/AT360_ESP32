@@ -2,10 +2,6 @@
 
 #include "targets/target.h"
 
-#include <Arduino.h>
-#include <SPI.h>
-#include <Wire.h>
-
 #include "io.h"
 
 typedef enum SPIDevice {

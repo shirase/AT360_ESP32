@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "direction.h"
 #include "sensors/compass.h"
 #include "drivers/compass/compass.h"

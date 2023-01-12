@@ -11,13 +11,6 @@ typedef struct findSerialPortConfigState_s {
 
 static findSerialPortConfigState_t findSerialPortConfigState;
 
-serialPortConfig_t *findSerialPortConfig(serialPortFunction_e function)
-{
-    memset(&findSerialPortConfigState, 0, sizeof(findSerialPortConfigState));
-
-    return findNextSerialPortConfig(function);
-}
-
 serialPortConfig_t *findNextSerialPortConfig(serialPortFunction_e function)
 {
     while (findSerialPortConfigState.lastIndex < SERIAL_PORT_COUNT) {
@@ -28,4 +21,11 @@ serialPortConfig_t *findNextSerialPortConfig(serialPortFunction_e function)
         }
     }
     return NULL;
+}
+
+serialPortConfig_t *findSerialPortConfig(serialPortFunction_e function)
+{
+    memset(&findSerialPortConfigState, 0, sizeof(findSerialPortConfigState));
+
+    return findNextSerialPortConfig(function);
 }

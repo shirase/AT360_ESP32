@@ -15,6 +15,8 @@
  * along with Cleanflight.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "targets/target.h"
+
 #include "config/gps.h"
 #include "config/serial.h"
 

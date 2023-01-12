@@ -80,3 +80,5 @@ typedef struct serialConfig_s {
     serialPortConfig_t portConfigs[SERIAL_PORT_COUNT];
     uint8_t reboot_character;               // which byte is used to reboot. Default 'R', could be changed carefully to something else.
 } serialConfig_t;
+
+serialPortConfig_t *findSerialPortConfig(serialPortFunction_e function);

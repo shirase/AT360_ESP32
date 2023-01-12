@@ -17,6 +17,10 @@
 
 #pragma once
 
+#include "drivers/serial.h"
+#include "config/gps.h"
+#include "config/serial.h"
+
 #ifdef USE_GPS
 
 #define GPS_HDOP_TO_EPH_MULTIPLIER      2   // empirical value

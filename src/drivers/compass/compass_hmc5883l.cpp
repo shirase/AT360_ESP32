@@ -16,6 +16,7 @@
  */
 
 #include "targets/target.h"
+#include <Arduino.h>
 
 #include <math.h>
 

@@ -1,5 +1,9 @@
 #include "bus.h"
 
+#include <Arduino.h>
+#include <SPI.h>
+#include <Wire.h>
+
 typedef struct spiHardware_s {
     uint8_t dev;
     SPIClass * instance;

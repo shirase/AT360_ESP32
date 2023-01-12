@@ -1,6 +1,8 @@
 #pragma once
 
 #include "targets/target.h"
+
+#include <stdint.h>
 #include "drivers/compass/compass.h"
 #include "sensors.h"
 

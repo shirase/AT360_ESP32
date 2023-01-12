@@ -16,6 +16,7 @@
  */
 
 #include "targets/target.h"
+#include "config/serial.h"
 
 #include <ctype.h>
 #include <string.h>
