@@ -1,7 +1,9 @@
 #pragma once
 
+#include "targets/target.h"
 #include <Arduino.h>
 #include "drivers/serial.h"
+#include "driver/uart.h"
 
 typedef enum {
     BAUD_AUTO = 0,
@@ -58,13 +60,15 @@ typedef enum {
 	FUNCTION_HDZERO_OSD                 = (1 << 25), // 33554432
 } serialPortFunction_e;
 
-typedef enum {
+/*typedef enum {
     SERIAL_PORT_NONE = -1,
     SERIAL_PORT_USART1 = 0,
     SERIAL_PORT_USART2,
     SERIAL_PORT_USART3,
     SERIAL_PORT_IDENTIFIER_MAX = SERIAL_PORT_USART3
-} serialPortIdentifier_e;
+} serialPortIdentifier_e;*/
+
+#define serialPortIdentifier_e uint8_t
 
 typedef struct serialPortConfig_s {
     uint32_t functionMask;
@@ -75,7 +79,7 @@ typedef struct serialPortConfig_s {
     uint8_t telemetry_baudrateIndex; // not used for all telemetry systems, e.g. HoTT only works at 19200.
 } serialPortConfig_t;
 
-#define SERIAL_PORT_COUNT 3
+#define SERIAL_PORT_COUNT UART_NUM_MAX+1
 
 typedef struct serialConfig_s {
     serialPortConfig_t portConfigs[SERIAL_PORT_COUNT];

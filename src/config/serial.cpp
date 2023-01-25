@@ -1,11 +1,12 @@
 #include "serial.h"
 #include "io/serial.h"
+#include "driver/uart.h"
 
 static serialConfig_t _serialConfig = {
     .portConfigs = {
         {
             .functionMask = FUNCTION_NONE,
-            .identifier = SERIAL_PORT_USART1,
+            .identifier = UART_NUM_0,
             0,
             0,
             0,
@@ -13,7 +14,7 @@ static serialConfig_t _serialConfig = {
         },
         {
             .functionMask = FUNCTION_GPS,
-            .identifier = SERIAL_PORT_USART2,
+            .identifier = UART_NUM_1,
             0,
             0,
             0,
@@ -21,7 +22,7 @@ static serialConfig_t _serialConfig = {
         },
         {
             .functionMask = FUNCTION_NONE,
-            .identifier = SERIAL_PORT_USART3,
+            .identifier = UART_NUM_2,
             0,
             0,
             0,

@@ -3,6 +3,7 @@
 #include "config/serial.h"
 #include "io/serial.h"
 #include "common/utils.h"
+#include "drivers/serial_uart.h"
 
 const uint32_t baudRates[] = { 0, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200, 230400, 250000,
         460800, 921600, 1000000, 1500000, 2000000, 2470000 }; // see baudRate_e
@@ -78,65 +79,7 @@ serialPort_t *openSerialPort(
 
     serialPort_t *serialPort = NULL;
 
-    switch (identifier) {
-#ifdef USE_VCP
-        case SERIAL_PORT_USB_VCP:
-            serialPort = usbVcpOpen();
-            break;
-#endif
-#ifdef USE_UART1
-        case SERIAL_PORT_USART1:
-            serialPort = uartOpen(USART1, rxCallback, rxCallbackData, baudRate, mode, options);
-            break;
-#endif
-#ifdef USE_UART2
-        case SERIAL_PORT_USART2:
-            serialPort = uartOpen(USART2, rxCallback, rxCallbackData, baudRate, mode, options);
-            break;
-#endif
-#ifdef USE_UART3
-        case SERIAL_PORT_USART3:
-            serialPort = uartOpen(USART3, rxCallback, rxCallbackData, baudRate, mode, options);
-            break;
-#endif
-#ifdef USE_UART4
-        case SERIAL_PORT_USART4:
-            serialPort = uartOpen(UART4, rxCallback, rxCallbackData, baudRate, mode, options);
-            break;
-#endif
-#ifdef USE_UART5
-        case SERIAL_PORT_USART5:
-            serialPort = uartOpen(UART5, rxCallback, rxCallbackData, baudRate, mode, options);
-            break;
-#endif
-#ifdef USE_UART6
-        case SERIAL_PORT_USART6:
-            serialPort = uartOpen(USART6, rxCallback, rxCallbackData, baudRate, mode, options);
-            break;
-#endif
-#ifdef USE_UART7
-        case SERIAL_PORT_USART7:
-            serialPort = uartOpen(UART7, rxCallback, rxCallbackData, baudRate, mode, options);
-            break;
-#endif
-#ifdef USE_UART8
-        case SERIAL_PORT_USART8:
-            serialPort = uartOpen(UART8, rxCallback, rxCallbackData, baudRate, mode, options);
-            break;
-#endif
-#ifdef USE_SOFTSERIAL1
-        case SERIAL_PORT_SOFTSERIAL1:
-            serialPort = openSoftSerial(SOFTSERIAL1, rxCallback, rxCallbackData, baudRate, mode, options);
-            break;
-#endif
-#ifdef USE_SOFTSERIAL2
-        case SERIAL_PORT_SOFTSERIAL2:
-            serialPort = openSoftSerial(SOFTSERIAL2, rxCallback, rxCallbackData, baudRate, mode, options);
-            break;
-#endif
-        default:
-            break;
-    }
+    serialPort = uartOpen(identifier, rxCallback, rxCallbackData, baudRate, mode, options);
 
     if (!serialPort) {
         return NULL;
