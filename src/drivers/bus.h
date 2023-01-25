@@ -7,6 +7,12 @@
 
 #define BUS_SCRATCHPAD_MEMORY_SIZE      (20)
 
+typedef enum {
+    DEVHW_NONE = 0,
+    DEVHW_HMC5883,
+    DEVHW_MPU6000,
+} devHardwareType_e;
+
 typedef enum SPIDevice {
     SPIINVALID = -1,
     SPIDEV_1   = 0,
@@ -38,6 +44,7 @@ typedef enum {
 } deviceFlags_e;
 
 typedef struct busDevice_s {
+    devHardwareType_e hardwareType;
     busType_e busType;              // Copy of busType to avoid additional pointer dereferencing
     uint32_t flags;                 // Copy of flags
     uint32_t param;                 // Copy of param
@@ -61,12 +68,6 @@ typedef struct busDevice_s {
                                     // for the first time. Useful when once device is shared between several sensors
                                     // (like MPU/ICM acc-gyro sensors)
 } busDevice_t;
-
-typedef enum {
-    DEVHW_NONE = 0,
-    DEVHW_HMC5883,
-    DEVHW_MPU6000,
-} devHardwareType_e;
 
 typedef enum {
     BUS_SPEED_INITIALIZATION = 0,

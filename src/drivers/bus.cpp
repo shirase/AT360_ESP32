@@ -293,32 +293,35 @@ bool busWriteBuf(const busDevice_t * dev, uint8_t reg, const uint8_t * data, uin
     }
 }
 
-/*static busDevice_t busDeviceHardwareMap[] = {
-    {.busType = BUSTYPE_I2C, .busdev = {.i2c = {.i2cBus = I2CDEV_1, .address = 0x1E}},}, // HMC5883
-};*/
-
-typedef struct {
-    busDevice_t DEVHW_HMC5883;
-} busDeviceHardwareMap_t;
-
-static busDeviceHardwareMap_t busDeviceHardwareMap = {
-    .DEVHW_HMC5883 = {.busType = BUSTYPE_I2C, .busdev = {.i2c = {.i2cBus = I2CDEV_1, .address = 0x1E}},}
+static busDevice_t busDeviceHardwareMap[] = {
+    {.hardwareType=DEVHW_HMC5883, .busType = BUSTYPE_I2C, .busdev = {.i2c = {.i2cBus = I2CDEV_1, .address = 0x1E}},}
 };
+
+busDevice_t * busDeviceFind(devHardwareType_e hardwareType)
+{
+    for (int i = 0; i < ARRAYLEN(busDeviceHardwareMap); i++)
+    {
+        if (busDeviceHardwareMap[i].hardwareType == hardwareType) {
+            return &busDeviceHardwareMap[i];
+        }
+    }
+    
+    return NULL;
+}
 
 busDevice_t * busDeviceInit(busType_e bus, devHardwareType_e hw)
 {
-    switch (hw)
-    {
-    case DEVHW_HMC5883:
-    {
-        busDevice_t * busDevice = &busDeviceHardwareMap.DEVHW_HMC5883;
+    busDevice_t * busDevice = busDeviceFind(hw);
+    if (!busDevice) 
+        return NULL;
+
+    if (busDevice->busType == BUSTYPE_I2C) {
         i2cInit(busDevice->busdev.i2c.i2cBus);
         return busDevice;
-        break;
-    }
-    
-    default:
-        break;
+    } else
+    if (busDevice->busType == BUSTYPE_SPI) {
+        spiInit(busDevice->busdev.spi.spiBus);
+        return busDevice;
     }
 
     return NULL;
@@ -333,16 +336,7 @@ busDevice_t * busDeviceOpen(busType_e bus, devHardwareType_e hw, uint8_t tag)
 {
     UNUSED(tag);
 
-    busDevice_t * busDevice = NULL;
-    switch (hw)
-    {
-    case DEVHW_HMC5883:
-        busDevice = &busDeviceHardwareMap.DEVHW_HMC5883;
-        break;
-    
-    default:
-        break;
-    }
+    busDevice_t * busDevice = busDeviceFind(hw);
 
     if (busDevice) {
         if (busDevice->busType == bus || bus == BUSTYPE_ANY) {
