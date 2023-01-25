@@ -22,6 +22,8 @@
  * Konstantin Sharlaimov - busDevice refactoring
 */
 
+#include <Arduino.h>
+
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -123,7 +125,7 @@ static void mpu6000AccAndGyroInit(gyroDev_t *gyro)
     mpuGyroRead(gyro);
 
     if (((int8_t)gyro->gyroADCRaw[1]) == -1 && ((int8_t)gyro->gyroADCRaw[0]) == -1) {
-        failureMode(FAILURE_GYRO_INIT_FAILED);
+        //failureMode(FAILURE_GYRO_INIT_FAILED);
     }
 }
 
@@ -139,14 +141,14 @@ bool mpu6000AccDetect(accDev_t *acc)
         return false;
     }
 
-    mpuContextData_t * ctx = busDeviceGetScratchpadMemory(acc->busDev);
+    mpuContextData_t * ctx = (mpuContextData_t*)busDeviceGetScratchpadMemory(acc->busDev);
     if (ctx->chipMagicNumber != 0x6860) {
         return false;
     }
 
     acc->initFn = mpu6000AccInit;
     acc->readFn = mpuAccReadScratchpad;
-    acc->accAlign = acc->busDev->param;
+    acc->accAlign = (sensor_align_e)acc->busDev->param;
 
     return true;
 }
@@ -196,7 +198,7 @@ static bool mpu6000DeviceDetect(busDevice_t * busDev)
 
 bool mpu6000GyroDetect(gyroDev_t *gyro)
 {
-    gyro->busDev = busDeviceInit(BUSTYPE_ANY, DEVHW_MPU6000, gyro->imuSensorToUse, OWNER_MPU);
+    gyro->busDev = busDeviceInit(BUSTYPE_ANY, DEVHW_MPU6000);
     if (gyro->busDev == NULL) {
         return false;
     }
@@ -207,7 +209,7 @@ bool mpu6000GyroDetect(gyroDev_t *gyro)
     }
 
     // Magic number for ACC detection to indicate that we have detected MPU6000 gyro
-    mpuContextData_t * ctx = busDeviceGetScratchpadMemory(gyro->busDev);
+    mpuContextData_t * ctx = (mpuContextData_t *)busDeviceGetScratchpadMemory(gyro->busDev);
     ctx->chipMagicNumber = 0x6860;
 
     gyro->initFn = mpu6000AccAndGyroInit;
@@ -215,7 +217,7 @@ bool mpu6000GyroDetect(gyroDev_t *gyro)
     gyro->intStatusFn = gyroCheckDataReady;
     gyro->temperatureFn = mpuTemperatureReadScratchpad;
     gyro->scale = 1.0f / 16.4f;     // 16.4 dps/lsb scalefactor
-    gyro->gyroAlign = gyro->busDev->param;
+    gyro->gyroAlign = (sensor_align_e)gyro->busDev->param;
 
     return true;
 }

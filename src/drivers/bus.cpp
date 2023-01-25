@@ -3,6 +3,7 @@
 #include <Arduino.h>
 #include <SPI.h>
 #include <Wire.h>
+#include "common/utils.h"
 
 typedef struct spiHardware_s {
     uint8_t dev;
@@ -14,7 +15,13 @@ static spiHardware_t spiHardwareMap[] = {
     {.dev = VSPI, .instance = NULL},
 };
 
-static const int spiClk = 1000000; // 1 MHz
+static const int spiClks[BUS_SPEED_ULTRAFAST+1] = {
+    500000,
+    1000000,
+    10000000,
+    20000000,
+    30000000,
+};
 
 void spiInit(SPIDevice device)
 {
@@ -35,7 +42,7 @@ bool spiBusReadRegister(const busDevice_t * dev, uint8_t reg, uint8_t * data)
 {
     SPIClass * spi = spiInstanceByDevice(dev->busdev.spi.spiBus);
 
-    spi->beginTransaction(SPISettings(spiClk, MSBFIRST, SPI_MODE0));
+    spi->beginTransaction(SPISettings(dev->busdev.spi.clock ?: spiClks[BUS_SPEED_SLOW], MSBFIRST, SPI_MODE0));
     digitalWrite(spi->pinSS(), LOW); //pull SS slow to prep other end for transfer
 
     spi->transfer(reg);
@@ -51,7 +58,7 @@ bool spiBusReadBuffer(const busDevice_t * dev, uint8_t reg, uint8_t * data, uint
 {
     SPIClass * spi = spiInstanceByDevice(dev->busdev.spi.spiBus);
 
-    spi->beginTransaction(SPISettings(spiClk, MSBFIRST, SPI_MODE0));
+    spi->beginTransaction(SPISettings(dev->busdev.spi.clock ?: spiClks[BUS_SPEED_SLOW], MSBFIRST, SPI_MODE0));
     digitalWrite(spi->pinSS(), LOW); //pull SS slow to prep other end for transfer
 
     spi->transfer(reg);
@@ -67,7 +74,7 @@ bool spiBusWriteRegister(const busDevice_t * dev, uint8_t reg, uint8_t data)
 {
     SPIClass * spi = spiInstanceByDevice(dev->busdev.spi.spiBus);
 
-    spi->beginTransaction(SPISettings(spiClk, MSBFIRST, SPI_MODE0));
+    spi->beginTransaction(SPISettings(dev->busdev.spi.clock ?: spiClks[BUS_SPEED_SLOW], MSBFIRST, SPI_MODE0));
     digitalWrite(spi->pinSS(), LOW); //pull SS slow to prep other end for transfer
 
     spi->transfer(reg);
@@ -83,7 +90,7 @@ bool spiBusWriteBuffer(const busDevice_t * dev, uint8_t reg, const uint8_t * dat
 {
     SPIClass * spi = spiInstanceByDevice(dev->busdev.spi.spiBus);
 
-    spi->beginTransaction(SPISettings(spiClk, MSBFIRST, SPI_MODE0));
+    spi->beginTransaction(SPISettings(dev->busdev.spi.clock ?: spiClks[BUS_SPEED_SLOW], MSBFIRST, SPI_MODE0));
     digitalWrite(spi->pinSS(), LOW); //pull SS slow to prep other end for transfer
 
     spi->transfer(reg);
@@ -320,6 +327,55 @@ busDevice_t * busDeviceInit(busType_e bus, devHardwareType_e hw)
 void busDeviceDeInit(busDevice_t * dev)
 {
     dev->busType = BUSTYPE_NONE;
+}
+
+busDevice_t * busDeviceOpen(busType_e bus, devHardwareType_e hw, uint8_t tag)
+{
+    UNUSED(tag);
+
+    busDevice_t * busDevice = NULL;
+    switch (hw)
+    {
+    case DEVHW_HMC5883:
+        busDevice = &busDeviceHardwareMap.DEVHW_HMC5883;
+        break;
+    
+    default:
+        break;
+    }
+
+    if (busDevice) {
+        if (busDevice->busType == bus || bus == BUSTYPE_ANY) {
+            return busDevice;
+        }
+    }
+
+    return NULL;
+}
+
+void spiBusSetSpeed(busDevice_t * dev, busSpeed_e speed)
+{
+    dev->busdev.spi.clock = spiClks[speed];
+}
+
+void busSetSpeed(busDevice_t * dev, busSpeed_e speed)
+{
+    UNUSED(speed);
+
+    switch (dev->busType) {
+        default:
+        case BUSTYPE_NONE:
+            // Not available
+            break;
+        case BUSTYPE_SPI:
+#ifdef USE_SPI
+            spiBusSetSpeed(dev, speed);
+#endif
+            break;
+        case BUSTYPE_I2C:
+            // Do nothing for I2C
+            break;
+    }
 }
 
 uint32_t busDeviceReadScratchpad(const busDevice_t * dev)
