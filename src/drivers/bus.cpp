@@ -294,33 +294,22 @@ bool busWriteBuf(const busDevice_t * dev, uint8_t reg, const uint8_t * data, uin
 }
 
 static busDevice_t busDeviceHardwareMap[] = {
-    {.hardwareType=DEVHW_HMC5883, .busType = BUSTYPE_I2C, .busdev = {.i2c = {.i2cBus = I2CDEV_1, .address = 0x1E}},}
+    {.hardwareType=DEVHW_MPU6000, .busType = BUSTYPE_SPI, .busdev = {.spi = {.spiBus = SPIDEV_1}}, .scratchpad = NULL},
+    {.hardwareType=DEVHW_HMC5883, .busType = BUSTYPE_I2C, .busdev = {.i2c = {.i2cBus = I2CDEV_1, .address = 0x1E}}, .scratchpad = NULL}
 };
-
-busDevice_t * busDeviceFind(devHardwareType_e hardwareType)
-{
-    for (int i = 0; i < ARRAYLEN(busDeviceHardwareMap); i++)
-    {
-        if (busDeviceHardwareMap[i].hardwareType == hardwareType) {
-            return &busDeviceHardwareMap[i];
-        }
-    }
-    
-    return NULL;
-}
 
 busDevice_t * busDeviceInit(busType_e bus, devHardwareType_e hw)
 {
-    busDevice_t * busDevice = busDeviceFind(hw);
+    busDevice_t * busDevice = busDeviceOpen(bus, hw);
     if (!busDevice) 
         return NULL;
 
-    if (busDevice->busType == BUSTYPE_I2C) {
-        i2cInit(busDevice->busdev.i2c.i2cBus);
-        return busDevice;
-    } else
     if (busDevice->busType == BUSTYPE_SPI) {
         spiInit(busDevice->busdev.spi.spiBus);
+        return busDevice;
+    } else
+    if (busDevice->busType == BUSTYPE_I2C) {
+        i2cInit(busDevice->busdev.i2c.i2cBus);
         return busDevice;
     }
 
@@ -332,18 +321,16 @@ void busDeviceDeInit(busDevice_t * dev)
     dev->busType = BUSTYPE_NONE;
 }
 
-busDevice_t * busDeviceOpen(busType_e bus, devHardwareType_e hw, uint8_t tag)
+busDevice_t * busDeviceOpen(busType_e bus, devHardwareType_e hw)
 {
-    UNUSED(tag);
-
-    busDevice_t * busDevice = busDeviceFind(hw);
-
-    if (busDevice) {
-        if (busDevice->busType == bus || bus == BUSTYPE_ANY) {
-            return busDevice;
+    for (int i = 0; i < ARRAYLEN(busDeviceHardwareMap); i++)
+    {
+        busDevice_t *dev = &busDeviceHardwareMap[i];
+        if (dev->hardwareType == hw && (bus == BUSTYPE_ANY || dev->busType == bus)) {
+            return dev;
         }
     }
-
+    
     return NULL;
 }
 

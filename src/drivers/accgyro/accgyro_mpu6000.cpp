@@ -136,7 +136,7 @@ static void mpu6000AccInit(accDev_t *acc)
 
 bool mpu6000AccDetect(accDev_t *acc)
 {
-    acc->busDev = busDeviceOpen(BUSTYPE_ANY, DEVHW_MPU6000, acc->imuSensorToUse);
+    acc->busDev = busDeviceOpen(BUSTYPE_ANY, DEVHW_MPU6000);
     if (acc->busDev == NULL) {
         return false;
     }

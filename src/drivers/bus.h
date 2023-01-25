@@ -79,7 +79,7 @@ typedef enum {
 
 busDevice_t * busDeviceInit(busType_e bus, devHardwareType_e hw);
 void busDeviceDeInit(busDevice_t * dev);
-busDevice_t * busDeviceOpen(busType_e bus, devHardwareType_e hw, uint8_t tag);
+busDevice_t * busDeviceOpen(busType_e bus, devHardwareType_e hw);
 
 bool busRead(const busDevice_t * dev, uint8_t reg, uint8_t * data);
 bool busReadBuf(const busDevice_t * dev, uint8_t reg, uint8_t * data, uint8_t length);
