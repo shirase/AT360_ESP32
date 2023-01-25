@@ -38,3 +38,28 @@ bool compassDetect(magDev_t *dev, magSensor_e magHardwareToUse)
 
     return true;
 }
+
+bool compassInit(void)
+{
+    if (!compassDetect(&mag.dev, MAG_HMC5883)) {
+        return false;
+    }
+
+    mag.dev.init(&mag.dev);
+
+    return true;
+}
+
+void compassUpdate(void)
+{
+    if (!mag.dev.read(&mag.dev)) {
+        mag.magADC[X] = 0;
+        mag.magADC[Y] = 0;
+        mag.magADC[Z] = 0;
+        return;
+    }
+
+    for (int axis = 0; axis < XYZ_AXIS_COUNT; axis++) {
+        mag.magADC[axis] = mag.dev.magADCRaw[axis];  // int32_t copy to work with
+    }
+}

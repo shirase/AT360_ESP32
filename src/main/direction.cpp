@@ -5,13 +5,15 @@
 
 void directionTask(void * parameter)
 {
-    if (!compassDetect(&mag.dev, MAG_HMC5883)) {
+    if (!compassInit()) {
         vTaskDelete(NULL);
         return;
     }
 
     for( ;; ) {
         TickType_t start = xTaskGetTickCount();
+
+        compassUpdate();
 
         vTaskDelay(100 / portTICK_PERIOD_MS - (xTaskGetTickCount() - start));
     }

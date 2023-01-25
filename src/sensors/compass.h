@@ -38,5 +38,7 @@ typedef struct compassConfig_s {
 #ifdef USE_MAG
 
 bool compassDetect(magDev_t *dev, magSensor_e magHardwareToUse);
+bool compassInit(void);
+void compassUpdate(void);
 
 #endif
