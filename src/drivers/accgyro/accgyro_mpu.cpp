@@ -90,7 +90,7 @@ static bool mpuUpdateSensorContext(busDevice_t * busDev, mpuContextData_t * ctx)
 bool mpuGyroReadScratchpad(gyroDev_t *gyro)
 {
     busDevice_t * busDev = gyro->busDev;
-    mpuContextData_t * ctx = busDeviceGetScratchpadMemory(busDev);
+    mpuContextData_t * ctx = (mpuContextData_t*)busDeviceGetScratchpadMemory(busDev);
 
     if (mpuUpdateSensorContext(busDev, ctx)) {
         gyro->gyroADCRaw[X] = (int16_t)((ctx->gyroRaw[0] << 8) | ctx->gyroRaw[1]);
@@ -104,7 +104,7 @@ bool mpuGyroReadScratchpad(gyroDev_t *gyro)
 
 bool mpuAccReadScratchpad(accDev_t *acc)
 {
-    mpuContextData_t * ctx = busDeviceGetScratchpadMemory(acc->busDev);
+    mpuContextData_t * ctx = (mpuContextData_t*)busDeviceGetScratchpadMemory(acc->busDev);
 
     if (ctx->lastReadStatus) {
         acc->ADCRaw[X] = (int16_t)((ctx->accRaw[0] << 8) | ctx->accRaw[1]);
@@ -118,7 +118,7 @@ bool mpuAccReadScratchpad(accDev_t *acc)
 
 bool mpuTemperatureReadScratchpad(gyroDev_t *gyro, int16_t * data)
 {
-    mpuContextData_t * ctx = busDeviceGetScratchpadMemory(gyro->busDev);
+    mpuContextData_t * ctx = (mpuContextData_t*)busDeviceGetScratchpadMemory(gyro->busDev);
 
     if (ctx->lastReadStatus) {
         // Convert to degC*10: degC = raw / 340 + 36.53
