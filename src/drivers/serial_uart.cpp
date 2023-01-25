@@ -24,8 +24,8 @@ serialPort_t *uartOpen(serialPortIdentifier_e USARTx, serialReceiveCallbackPtr r
     s->port.vTable = &uartVTable;
 
     // common serial initialisation code should move to serialPort::init()
-    s->port.rxBufferHead = s->port.rxBufferTail = 0;
-    s->port.txBufferHead = s->port.txBufferTail = 0;
+    /*s->port.rxBufferHead = s->port.rxBufferTail = 0;
+    s->port.txBufferHead = s->port.txBufferTail = 0;*/
     // callback works for IRQ-based RX ONLY
     s->port.rxCallback = rxCallback;
     s->port.rxCallbackData = rxCallbackData;
@@ -60,26 +60,18 @@ uint32_t uartTotalRxBytesWaiting(const serialPort_t *instance)
 {
     const uartPort_t *s = (const uartPort_t*)instance;
 
-    if (s->port.rxBufferHead >= s->port.rxBufferTail) {
-        return s->port.rxBufferHead - s->port.rxBufferTail;
-    } else {
-        return s->port.rxBufferSize + s->port.rxBufferHead - s->port.rxBufferTail;
-    }
+    int length = 0;
+    uart_get_buffered_data_len(s->USARTx, (size_t*)&length);
+    return length;
 }
 
 uint32_t uartTotalTxBytesFree(const serialPort_t *instance)
 {
-    const uartPort_t *s = (const uartPort_t*)instance;
-
-    uint32_t bytesUsed;
-
-    if (s->port.txBufferHead >= s->port.txBufferTail) {
-        bytesUsed = s->port.txBufferHead - s->port.txBufferTail;
-    } else {
-        bytesUsed = s->port.txBufferSize + s->port.txBufferHead - s->port.txBufferTail;
-    }
-
-    return (s->port.txBufferSize - 1) - bytesUsed;
+    uartPort_t *s = (uartPort_t *)instance;
+    
+    int length = 0;
+    uart_get_tx_buffer_free_size(s->USARTx, (size_t*)&length);
+    return length;
 }
 
 uint8_t uartRead(serialPort_t *instance)
