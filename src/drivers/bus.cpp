@@ -286,8 +286,16 @@ bool busWriteBuf(const busDevice_t * dev, uint8_t reg, const uint8_t * data, uin
     }
 }
 
-static busDevice_t busDeviceHardwareMap[] = {
+/*static busDevice_t busDeviceHardwareMap[] = {
     {.busType = BUSTYPE_I2C, .busdev = {.i2c = {.i2cBus = I2CDEV_1, .address = 0x1E}},}, // HMC5883
+};*/
+
+typedef struct {
+    busDevice_t DEVHW_HMC5883;
+} busDeviceHardwareMap_t;
+
+static busDeviceHardwareMap_t busDeviceHardwareMap = {
+    .DEVHW_HMC5883 = {.busType = BUSTYPE_I2C, .busdev = {.i2c = {.i2cBus = I2CDEV_1, .address = 0x1E}},}
 };
 
 busDevice_t * busDeviceInit(busType_e bus, devHardwareType_e hw)
@@ -296,7 +304,7 @@ busDevice_t * busDeviceInit(busType_e bus, devHardwareType_e hw)
     {
     case DEVHW_HMC5883:
     {
-        busDevice_t * busDevice = &busDeviceHardwareMap[0];
+        busDevice_t * busDevice = &busDeviceHardwareMap.DEVHW_HMC5883;
         i2cInit(busDevice->busdev.i2c.i2cBus);
         return busDevice;
         break;
