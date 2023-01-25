@@ -321,3 +321,27 @@ void busDeviceDeInit(busDevice_t * dev)
 {
     dev->busType = BUSTYPE_NONE;
 }
+
+uint32_t busDeviceReadScratchpad(const busDevice_t * dev)
+{
+    uint32_t * mem = (uint32_t*)busDeviceGetScratchpadMemory(dev);
+    return (mem != NULL) ? mem[0] : 0;
+}
+
+void busDeviceWriteScratchpad(busDevice_t * dev, uint32_t value)
+{
+    uint32_t * mem = (uint32_t*)busDeviceGetScratchpadMemory(dev);
+
+    if (mem != NULL) {
+        mem[0] = value;
+    }
+}
+
+void * busDeviceGetScratchpadMemory(const busDevice_t * dev)
+{
+    if (dev->scratchpad == NULL) {
+        ((busDevice_t *)dev)->scratchpad = (uint32_t*)memAllocate(BUS_SCRATCHPAD_MEMORY_SIZE, OWNER_SYSTEM);
+    }
+
+    return (void *)dev->scratchpad;
+}

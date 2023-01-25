@@ -3,6 +3,9 @@
 #include "targets/target.h"
 
 #include "io.h"
+#include "common/memory.h"
+
+#define BUS_SCRATCHPAD_MEMORY_SIZE      (20)
 
 typedef enum SPIDevice {
     SPIINVALID = -1,
@@ -52,6 +55,7 @@ typedef struct busDevice_s {
         } i2c;
 #endif
     } busdev;
+    IO_t irqPin;
     uint32_t * scratchpad;          // Memory where device driver can store persistent data. Zeroed out when initializing the device
                                     // for the first time. Useful when once device is shared between several sensors
                                     // (like MPU/ICM acc-gyro sensors)
@@ -69,3 +73,7 @@ bool busRead(const busDevice_t * dev, uint8_t reg, uint8_t * data);
 bool busReadBuf(const busDevice_t * dev, uint8_t reg, uint8_t * data, uint8_t length);
 bool busWrite(const busDevice_t * dev, uint8_t reg, uint8_t data);
 bool busWriteBuf(const busDevice_t * dev, uint8_t reg, const uint8_t * data, uint8_t length);
+
+uint32_t busDeviceReadScratchpad(const busDevice_t * dev);
+void busDeviceWriteScratchpad(busDevice_t * dev, uint32_t value);
+void * busDeviceGetScratchpadMemory(const busDevice_t * dev);

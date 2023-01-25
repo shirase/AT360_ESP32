@@ -4,6 +4,7 @@
 #include "main/position.h"
 #include "main/direction.h"
 #include "main/servos.h"
+#include "main/accgyro.h"
 
 void setup() {
   xTaskCreate(
@@ -36,6 +37,15 @@ void setup() {
   xTaskCreate(
     servosTask,
     "servosTask",
+    1000,
+    NULL,
+    3,
+    NULL
+  );
+
+  xTaskCreate(
+    accgyroTask,
+    "accgyroTask",
     1000,
     NULL,
     3,
